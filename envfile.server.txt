@@ -10,6 +10,8 @@ KOBOFORM_PUBLIC_SUBDOMAIN=
 KOBOCAT_PUBLIC_SUBDOMAIN=
 # The publicly-accessible subdomain for the Enketo Express web forms.
 ENKETO_EXPRESS_PUBLIC_SUBDOMAIN=
+# The publically-accessible subdomain for the ODK Aggregate portal
+ODK_AGGREGATE_PUBLIC_SUBDOMAIN=
 # See "api key" here: https://github.com/kobotoolbox/enketo-express/tree/master/config#linked-form-and-data-server.
 ENKETO_API_TOKEN=
 # Canonically a 50-character random string. See https://docs.djangoproject.com/en/1.8/ref/settings/#secret-key and https://docs.djangoproject.com/en/1.8/ref/settings/#secret-key.
@@ -18,6 +20,9 @@ DJANGO_SECRET_KEY=
 KOBO_SUPERUSER_USERNAME=
 # The initial superuser's password.
 KOBO_SUPERUSER_PASSWORD=
+
+KEYSTORE_PASSWORD=
+TRUSTSTORE_PASSWORD=
 
 ######################
 # Optional variables #
@@ -31,3 +36,4 @@ KOBO_SUPERUSER_PASSWORD=
 #EMAIL_HOST_USER=
 #EMAIL_HOST_PASSWORD=
 #EMAIL_USE_TLS=
+
