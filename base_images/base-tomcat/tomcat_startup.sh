@@ -24,10 +24,10 @@
 
  
 #Location of JAVA_HOME (bin files)
-#export JAVA_HOME=/usr/java/latest
+export JAVA_HOME=/usr/lib/jvm/java-1.7.0-openjdk-amd64
  
 #Add Java binary files to PATH
-#export PATH=$JAVA_HOME/bin:$PATH
+export PATH=$JAVA_HOME/bin:$PATH
  
 #CATALINA_HOME is the location of the bin files of Tomcat  
 export CATALINA_HOME=/usr/local/tomcat  

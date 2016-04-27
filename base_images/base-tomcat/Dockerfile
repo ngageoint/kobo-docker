@@ -2,7 +2,7 @@ FROM kobotoolbox/base:latest
 
 RUN apt-get -qq update && \
     apt-get -qq -y install \
-        openjdk-7-jre \
+        openjdk-7-jdk \
         wget && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
@@ -10,8 +10,23 @@ RUN apt-get -qq update && \
 RUN wget https://github.com/jwilder/dockerize/releases/download/v0.2.0/dockerize-linux-amd64-v0.2.0.tar.gz
 RUN tar -C /usr/local/bin -xzvf dockerize-linux-amd64-v0.2.0.tar.gz
 
+ENV APR_VERSION 1.5.2
+ENV APR_TGZ_URL http://apache.cs.utah.edu/apr/apr-$APR_VERSION.tar.gz
+ENV APR_HOME /usr/local/apr
+
+RUN set -x \
+    && mkdir $APR_HOME \
+    && cd $APR_HOME \
+    && curl -fSL "$APR_TGZ_URL" -o apr.tar.gz \
+    && tar -xvf apr.tar.gz --strip-components=1 \
+    && ./configure \
+    && make \
+    && make install \
+    && /bin/rm apr.tar.gz
+
+ENV JAVA_HOME /usr/lib/jvm/java-1.7.0-openjdk-amd64
 ENV CATALINA_HOME /usr/local/tomcat
-ENV PATH $CATALINA_HOME/bin:$PATH
+ENV PATH $JAVA_HOME/bin:$CATALINA_HOME/bin:$PATH
 RUN mkdir -p "$CATALINA_HOME"
 WORKDIR $CATALINA_HOME
 
@@ -47,9 +62,17 @@ RUN set -x \
 	&& curl -fSL "$TOMCAT_TGZ_URL.asc" -o tomcat.tar.gz.asc \
 	&& gpg --batch --verify tomcat.tar.gz.asc tomcat.tar.gz \
 	&& tar -xvf tomcat.tar.gz --strip-components=1 \
+        && tar xf bin/tomcat-native.tar.gz \
+        && cd tomcat-native-1.1.34-src/jni/native \
+        && ./configure \
+        && make \
+        && make install \
+        && echo /usr/local/apr/lib > /etc/ld.so.conf.d/apr.conf \
+        && ldconfig \
+        && cd $CATALINA_HOME \ 
 	&& rm bin/*.bat \
 	&& rm tomcat.tar.gz* \
-        && chown -R tomcat.tomcat $CATALINA_HOME
+        && chown -R tomcat.tomcat *
 
 COPY ./tomcat_startup.sh /etc/my_init.d/01_tomcat_startup.sh
 
