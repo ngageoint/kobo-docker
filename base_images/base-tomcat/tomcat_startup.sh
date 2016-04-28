@@ -34,6 +34,8 @@ export CATALINA_HOME=/usr/local/tomcat
  
 #CATALINA_BASE is the location of the configuration files of this instance of Tomcat
 #export CATALINA_BASE=/usr/local/tomcat
+
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CATALINA_HOME/lib
  
 #TOMCAT_USER is the default user of tomcat
 export TOMCAT_USER=tomcat

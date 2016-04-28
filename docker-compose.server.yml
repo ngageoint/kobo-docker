@@ -18,8 +18,8 @@ psql:
   restart: always
 
 odkaggregate:
-  image: kobotoolbox/odk-aggregate:latest
-  # build: ./base_images/odk-aggregate
+  #image: kobotoolbox/odk-aggregate:latest
+  build: ./base_images/odk-aggregate
   hostname: odkaggregate
   env_file:
     - ./envfile.server.txt
@@ -55,6 +55,7 @@ kobocat:
     - kpi
   volumes:
     - "./.vols/static/kobocat:/srv/static"
+    - ./scripts/kobo_set_require_auth.bash:/etc/my_init.d/00_kobo_set_require_auth.bash:ro
     - ./scripts/wait_for_rabbit.bash:/etc/my_init.d/01_wait_for_rabbit.bash:ro
     - ./scripts/wait_for_mongo.bash:/etc/my_init.d/02_wait_for_mongo.bash:ro
     - ./scripts/wait_for_postgres.bash:/etc/my_init.d/03_wait_for_postgres.bash:ro
@@ -99,7 +100,7 @@ kpi:
     - ./scripts/wait_for_postgres.bash:/etc/my_init.d/02_wait_for_postgres.bash:ro
     - ./scripts/create_kobo_superuser.bash://etc/my_init.d/20_create_kobo_superuser.bash:ro
     - ./secrets/:/tmp/kobo_toolbox_secrets/:ro
-    - ./scripts/django_add_ca_cert.bash:/etc/my_init.d/30_django_add_ca_cert.bash:ro
+    - ./scripts/kpi_add_ca_cert.bash:/etc/my_init.d/30_kpi_add_ca_cert.bash:ro
     - ./scripts/ssl_add_ca_cert.bash:/etc/my_init.d/31_ssl_add_ca_cert.bash:ro
     - ./scripts/computed_vars.server.source.bash:/etc/profile.d/kpi_computed_vars.source.bash.sh:ro
     # Dev: Use the live `kpi` directory from the host machine.

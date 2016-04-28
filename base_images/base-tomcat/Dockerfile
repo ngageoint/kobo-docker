@@ -3,7 +3,8 @@ FROM kobotoolbox/base:latest
 RUN apt-get -qq update && \
     apt-get -qq -y install \
         openjdk-7-jdk \
-        wget && \
+        wget \
+        libssl-dev && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
@@ -64,7 +65,7 @@ RUN set -x \
 	&& tar -xvf tomcat.tar.gz --strip-components=1 \
         && tar xf bin/tomcat-native.tar.gz \
         && cd tomcat-native-1.1.34-src/jni/native \
-        && ./configure \
+        && ./configure --prefix $CATALINA_HOME \
         && make \
         && make install \
         && echo /usr/local/apr/lib > /etc/ld.so.conf.d/apr.conf \
