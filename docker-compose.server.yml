@@ -30,6 +30,9 @@ odkaggregate:
     - ./scripts/wait_for_postgres.bash:/etc/my_init.d/00_wait_for_postgres.bash:ro
     - ./scripts/ssl_add_ca_cert.bash:/etc/my_init.d/01_ssl_add_ca_cert.bash:ro
   restart: always
+  # When testing with a manipulated `/etc/hosts` file.
+  # extra_hosts:
+  #   - 'ee-local.kobotoolbox.org:172.17.0.1'
 
 mongo:
   image: kobotoolbox/mongo:latest
@@ -173,6 +176,7 @@ enketo_express:
   # extra_hosts:
   #   - 'kf-local.kobotoolbox.org:172.17.0.1'
   #   - 'kc-local.kobotoolbox.org:172.17.0.1'
+  #   - 'odk-aggregate.kobotoolbox.org:172.17.0.1'
 
 # Adapted from https://github.com/kobotoolbox/enketo-express/blob/docker/docker-compose.yml.
 redis_main:
