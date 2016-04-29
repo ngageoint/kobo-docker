@@ -18,14 +18,15 @@ psql:
   restart: always
 
 odkaggregate:
-  #image: kobotoolbox/odk-aggregate:latest
-  build: ./base_images/odk-aggregate
+  image: kobotoolbox/odk-aggregate:latest
+  #build: ./base_images/odk-aggregate
   hostname: odkaggregate
   env_file:
     - ./envfile.server.txt
   links:
     - psql
   volumes:
+    - "./.vols/../log/odkaggregate:/usr/local/tomcat/logs"
     - ./secrets/:/tmp/kobo_toolbox_secrets/:ro
     - ./scripts/wait_for_postgres.bash:/etc/my_init.d/00_wait_for_postgres.bash:ro
     - ./scripts/ssl_add_ca_cert.bash:/etc/my_init.d/01_ssl_add_ca_cert.bash:ro
@@ -33,6 +34,23 @@ odkaggregate:
   # When testing with a manipulated `/etc/hosts` file.
   # extra_hosts:
   #   - 'ee-local.kobotoolbox.org:172.17.0.1'
+
+geoserver:
+  image: kobotoolbox/geoserver:latest
+  #build: ./base_images/geoserver
+  hostname: geoserver
+  env_file:
+    - ./envfile.server.txt
+  links:
+    - psql
+  volumes:
+   - "./.vols/../log/geoserver:/usr/local/tomcat/logs" 
+   - "./.vols/geoserver:/srv/geoserver"
+   - ./scripts/wait_for_geoserver.bash:/etc/my_init.d/02_wait_for_geoserver.bash:ro
+   - ./scripts/geoserver_update_security.bash:/etc/my_init.d/10_geoserver_update_security.bash:ro
+  environment:
+    - GEOSERVER_DATA_DIR=/srv/geoserver
+  restart: always
 
 mongo:
   image: kobotoolbox/mongo:latest
@@ -130,7 +148,7 @@ nginx:
     - NGINX_CONFIG_FILE_NAME=nginx_site_https.conf
     - NGINX_DEBUG_kpi=False
     - NGINX_DEBUG_kobocat=False
-    - TEMPLATED_VAR_REFS=$${PUBLIC_DOMAIN_NAME} $${KOBOFORM_PUBLIC_SUBDOMAIN} $${KOBOCAT_PUBLIC_SUBDOMAIN} $${ENKETO_EXPRESS_PUBLIC_SUBDOMAIN} $${ODK_AGGREGATE_PUBLIC_SUBDOMAIN}
+    - TEMPLATED_VAR_REFS=$${PUBLIC_DOMAIN_NAME} $${KOBOFORM_PUBLIC_SUBDOMAIN} $${KOBOCAT_PUBLIC_SUBDOMAIN} $${ENKETO_EXPRESS_PUBLIC_SUBDOMAIN} $${ODK_AGGREGATE_PUBLIC_SUBDOMAIN} $${GEOSERVER_PUBLIC_SUBDOMAIN}
   ports:
     - 80:80
     - 443:443
@@ -146,6 +164,7 @@ nginx:
     - kpi
     - enketo_express
     - odkaggregate
+    - geoserver
   restart: always
 
 # Adapted from https://github.com/kobotoolbox/enketo-express/blob/docker/docker-compose.yml.

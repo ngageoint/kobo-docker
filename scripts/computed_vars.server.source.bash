@@ -14,3 +14,7 @@ export DJANGO_ALLOWED_HOSTS=".${PUBLIC_DOMAIN_NAME}" # Duplicate. Necessary?
 
 # Enketo Express.
 export ENKETO_API_KEY="${ENKETO_API_TOKEN}"
+
+# GeoServer
+export GEOSERVER_URL="https://${GEOSERVER_PUBLIC_SUBDOMAIN}.${PUBLIC_DOMAIN_NAME}"
+

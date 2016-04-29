@@ -39,6 +39,8 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CATALINA_HOME/lib
  
 #TOMCAT_USER is the default user of tomcat
 export TOMCAT_USER=tomcat
+
+chown $TOMCAT_USER.$TOMCAT_USER $CATALINA_HOME/logs
  
 #TOMCAT_USAGE is the message if this script is called without any options
 TOMCAT_USAGE="Usage: $0 {\e[00;32mstart\e[00m|\e[00;31mstop\e[00m|\e[00;31mkill\e[00m|\e[00;32mstatus\e[00m|\e[00;31mrestart\e[00m}"
