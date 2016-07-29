@@ -17,6 +17,26 @@ psql -U $KOBO_PSQL_DB_USER -h psql -d $ODK_PSQL_DB_NAME <<< "alter database \"$O
 psql -U $KOBO_PSQL_DB_USER -d $ODK_PSQL_DB_NAME -h psql <<< "create schema \"$ODK_PSQL_DB_SCHEMA\";" > /dev/null
 psql -U $KOBO_PSQL_DB_USER -d $ODK_PSQL_DB_NAME -h psql <<< "grant all privileges on schema \"$ODK_PSQL_DB_SCHEMA\" to \"$ODK_PSQL_DB_USER\";" > /dev/null
 
+cat << EOF > /tmp/post_install.sql
+CREATE OR REPLACE FUNCTION "$ODK_PSQL_DB_SCHEMA".create_prefixed_name_view(tblname text, prefix text, viewname text)
+RETURNS void
+AS \$\$
+BEGIN
+EXECUTE (
+select 'CREATE OR REPLACE VIEW ' || viewname || ' AS SELECT ' ||
+(select string_agg(quote_ident(table_name) || '.' ||
+quote_ident(column_name) || ' AS ' || quote_ident(prefix || '_' ||
+column_name), ', ')
+from information_schema.columns
+where table_name = tblname
+group by table_name) ||
+' FROM ' || quote_ident(tblname) || ';'
+);
+END
+\$\$ LANGUAGE plpgsql;
+EOF
+psql -U $KOBO_PSQL_DB_USER -d $ODK_PSQL_DB_NAME -h psql < /tmp/post_install.sql
+
 sed -i 's/$KEYSTORE_PASSWORD/'$KEYSTORE_PASSWORD'/g' /usr/local/tomcat/conf/server.xml
 sed -i 's/$TRUSTSTORE_PASSWORD/'$TRUSTSTORE_PASSWORD'/g' /usr/local/tomcat/conf/server.xml
 
