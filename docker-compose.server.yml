@@ -46,6 +46,7 @@ geoserver:
   volumes:
    - "./.vols/../log/geoserver:/usr/local/tomcat/logs" 
    - "./.vols/geoserver:/srv/geoserver"
+   - ./scripts/geoserver_chown.bash:/etc/my_init.d/00_geoserver_chown.bash
    - ./scripts/wait_for_geoserver.bash:/etc/my_init.d/02_wait_for_geoserver.bash:ro
    - ./scripts/geoserver_update_security.bash:/etc/my_init.d/10_geoserver_update_security.bash:ro
   environment:

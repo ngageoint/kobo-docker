@@ -23,7 +23,8 @@
                acceptCount="100" scheme="https" secure="true"
                SSLEnabled="true"
                SSLCertificateFile="/tmp/kobo_toolbox_secrets/ssl.crt"
-               SSLCertificateKeyFile="/tmp/kobo_toolbox_secrets/ssl.key" />
+               SSLCertificateKeyFile="/tmp/kobo_toolbox_secrets/ssl.key"
+               SSLCACertificateFile="/tmp/kobo_toolbox_secrets/rootCA.crt" />
     <Connector port="8009" protocol="AJP/1.3" redirectPort="8443" />
     <Engine name="Catalina" defaultHost="localhost">
       <Realm className="org.apache.catalina.realm.UserDatabaseRealm"
