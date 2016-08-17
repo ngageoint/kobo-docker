@@ -1,14 +1,5 @@
 # For public, HTTPS servers.
 
-rabbit:
-  image: kobotoolbox/rabbit:latest
-  # build: ./base_images/rabbit
-  hostname: rabbit
-  environment:
-    - RABBITMQ_LOGS=-
-    - RABBITMQ_SASL_LOGS=-
-  restart: always
-
 psql:
   image: kobotoolbox/psql:latest
   # build: ./base_images/psql
@@ -53,92 +44,6 @@ geoserver:
     - GEOSERVER_DATA_DIR=/srv/geoserver
   restart: always
 
-mongo:
-  image: kobotoolbox/mongo:latest
-  # build: ./base_images/mongo
-  hostname: mongo
-  environment:
-    - MONGO_DATA=/srv/db
-  volumes:
-    - "./.vols/mongo:/srv/db"
-  restart: always
-
-kobocat:
-  image: kobotoolbox/kobocat:latest
-  # build: ../kobocat
-  hostname: kobocat
-  env_file:
-    - ./envfile.server.txt
-    - ./envfiles/smtp.txt
-  links:
-    - rabbit
-    - mongo
-    - psql
-    - kpi
-  volumes:
-    - "./.vols/static/kobocat:/srv/static"
-    - ./scripts/kobo_set_require_auth.bash:/etc/my_init.d/00_kobo_set_require_auth.bash:ro
-    - ./scripts/wait_for_rabbit.bash:/etc/my_init.d/01_wait_for_rabbit.bash:ro
-    - ./scripts/wait_for_mongo.bash:/etc/my_init.d/02_wait_for_mongo.bash:ro
-    - ./scripts/wait_for_postgres.bash:/etc/my_init.d/03_wait_for_postgres.bash:ro
-    - ./scripts/wait_for_kpi.bash:/etc/my_init.d/04_wait_for_kpi.bash:ro
-    - ./secrets/:/tmp/kobo_toolbox_secrets/:ro
-    - ./scripts/ssl_add_ca_cert.bash:/etc/my_init.d/05_ssl_add_ca_cert.bash:ro
-    - ./scripts/computed_vars.server.source.bash:/etc/profile.d/kobocat_computed_vars.source.bash.sh:ro
-    # Dev: Use the live `kobocat` directory from the host machine.
-    # - ../kobocat:/srv/src/kobocat
-    # Dev: Share your `.transifexrc` into the container.
-    # - ./.transifexrc:/root/.transifexrc
-  environment:
-    - KOBOCAT_BROKER_URL=amqp://guest:guest@rabbit:5672/
-    - ENKETO_PROTOCOL=https
-    - ENKETO_VERSION=express
-    - DJANGO_SETTINGS_MODULE=onadata.settings.kc_environ
-    - DJANGO_DEBUG=False
-    - DATABASE_URL=postgis://kobo:kobo@psql:5432/kobotoolbox
-    - KOBO_PSQL_DB_NAME=kobotoolbox
-    - KOBO_PSQL_DB_USER=kobo
-  restart: always
-  # When testing with a manipulated `/etc/hosts` file.
-  # extra_hosts:
-  #   - 'kf-local.kobotoolbox.org:172.17.0.1'
-  #   - 'ee-local.kobotoolbox.org:172.17.0.1'
-
-kpi:
-  image: kobotoolbox/kpi:latest
-  # build: ../kpi
-  hostname: kpi
-  env_file:
-    - ./envfile.server.txt
-    - ./envfiles/smtp.txt
-  links:
-    - psql
-    - rabbit
-  volumes:
-    - "./.vols/static/kpi:/srv/static"
-    # The Whoosh search index needs persistent storage
-    - "./.vols/whoosh:/srv/whoosh"
-    - ./scripts/wait_for_rabbit.bash:/etc/my_init.d/01_wait_for_rabbit.bash:ro
-    - ./scripts/wait_for_postgres.bash:/etc/my_init.d/02_wait_for_postgres.bash:ro
-    - ./scripts/create_kobo_superuser.bash://etc/my_init.d/20_create_kobo_superuser.bash:ro
-    - ./secrets/:/tmp/kobo_toolbox_secrets/:ro
-    - ./scripts/kpi_add_ca_cert.bash:/etc/my_init.d/30_kpi_add_ca_cert.bash:ro
-    - ./scripts/ssl_add_ca_cert.bash:/etc/my_init.d/31_ssl_add_ca_cert.bash:ro
-    - ./scripts/computed_vars.server.source.bash:/etc/profile.d/kpi_computed_vars.source.bash.sh:ro
-    # Dev: Use the live `kpi` directory from the host machine.
-    # - ../kpi:/srv/src/kpi
-    # Dev: Share your `.transifexrc` into the container.
-    # - ./.transifexrc:/root/.transifexrc
-  environment:
-    - ENKETO_VERSION=express
-    - DATABASE_URL=postgres://kobo:kobo@psql:5432/kobotoolbox
-    - DJANGO_DEBUG=False
-    - KPI_PREFIX=/
-  restart: always
-  # When testing with a manipulated `/etc/hosts` file.
-  # extra_hosts:
-  #   - 'kc-local.kobotoolbox.org:172.17.0.1'
-
 nginx:
   image: kobotoolbox/nginx:latest
   # build: ./base_images/nginx
@@ -149,7 +54,7 @@ nginx:
     - NGINX_CONFIG_FILE_NAME=nginx_site_https.conf
     - NGINX_DEBUG_kpi=False
     - NGINX_DEBUG_kobocat=False
-    - TEMPLATED_VAR_REFS=$${PUBLIC_DOMAIN_NAME} $${KOBOFORM_PUBLIC_SUBDOMAIN} $${KOBOCAT_PUBLIC_SUBDOMAIN} $${ENKETO_EXPRESS_PUBLIC_SUBDOMAIN} $${ODK_AGGREGATE_PUBLIC_SUBDOMAIN} $${GEOSERVER_PUBLIC_SUBDOMAIN}
+    - TEMPLATED_VAR_REFS=$${PUBLIC_DOMAIN_NAME} $${ENKETO_EXPRESS_PUBLIC_SUBDOMAIN} $${ODK_AGGREGATE_PUBLIC_SUBDOMAIN} $${GEOSERVER_PUBLIC_SUBDOMAIN}
   ports:
     - 80:80
     - 443:443
@@ -161,8 +66,6 @@ nginx:
       - ./nginx/nginx_command.bash:/etc/service/nginx/run:ro
       - ./secrets/:/tmp/kobo_toolbox_secrets/:ro
   links:
-    - kobocat
-    - kpi
     - enketo_express
     - odkaggregate
     - geoserver
