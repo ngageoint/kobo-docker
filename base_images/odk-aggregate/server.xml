@@ -13,11 +13,11 @@
               pathname="conf/tomcat-users.xml" />
   </GlobalNamingResources>
   <Service name="Catalina">
-    <Connector port="8080" protocol="HTTP/1.1" 
+    <Connector port="80" protocol="HTTP/1.1" 
                connectionTimeout="20000" 
-               redirectPort="8443" />
+               redirectPort="443" />
     <Connector protocol="org.apache.coyote.http11.Http11AprProtocol"
-               port="8443" maxHttpHeaderSize="8192"
+               port="443" maxHttpHeaderSize="8192"
                maxThreads="150"
                enableLookups="false" disableUploadTimeout="true"
                acceptCount="100" scheme="https" secure="true"
@@ -25,7 +25,7 @@
                SSLCertificateFile="/tmp/kobo_toolbox_secrets/ssl.crt"
                SSLCertificateKeyFile="/tmp/kobo_toolbox_secrets/ssl.key"
                SSLCACertificateFile="/tmp/kobo_toolbox_secrets/rootCA.crt" />
-    <Connector port="8009" protocol="AJP/1.3" redirectPort="8443" />
+    <Connector port="8009" protocol="AJP/1.3" redirectPort="443" />
     <Engine name="Catalina" defaultHost="localhost">
       <Realm className="org.apache.catalina.realm.UserDatabaseRealm"
              resourceName="UserDatabase"/>

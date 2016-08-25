@@ -85,7 +85,7 @@ server {
     add_header X-Content-Type-Options nosniff;
 
     location / {
-        proxy_pass  https://odkaggregate:8443/;
+        proxy_pass  https://odkaggregate:443/;
         proxy_redirect off;
         proxy_set_header Host $http_host;
         proxy_set_header X-Real-IP $remote_addr ;

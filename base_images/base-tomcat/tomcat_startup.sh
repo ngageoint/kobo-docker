@@ -24,7 +24,7 @@
 
  
 #Location of JAVA_HOME (bin files)
-export JAVA_HOME=/usr/lib/jvm/java-1.7.0-openjdk-amd64
+export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64
  
 #Add Java binary files to PATH
 export PATH=$JAVA_HOME/bin:$PATH
@@ -38,7 +38,7 @@ export CATALINA_HOME=/usr/local/tomcat
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CATALINA_HOME/lib
  
 #TOMCAT_USER is the default user of tomcat
-export TOMCAT_USER=tomcat
+export TOMCAT_USER=root
 
 chown $TOMCAT_USER.$TOMCAT_USER $CATALINA_HOME/logs
  

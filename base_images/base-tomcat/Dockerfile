@@ -2,7 +2,7 @@ FROM kobotoolbox/base:latest
 
 RUN apt-get -qq update && \
     apt-get -qq -y install \
-        openjdk-7-jdk \
+        openjdk-8-jdk \
         wget \
         libssl-dev && \
     apt-get clean && \
@@ -25,7 +25,7 @@ RUN set -x \
     && make install \
     && /bin/rm apr.tar.gz
 
-ENV JAVA_HOME /usr/lib/jvm/java-1.7.0-openjdk-amd64
+ENV JAVA_HOME /usr/lib/jvm/java-1.8.0-openjdk-amd64
 ENV CATALINA_HOME /usr/local/tomcat
 ENV PATH $JAVA_HOME/bin:$CATALINA_HOME/bin:$PATH
 RUN mkdir -p "$CATALINA_HOME"

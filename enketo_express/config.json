@@ -1,7 +1,14 @@
 {
-    "app name": "Enketo Express for KoBo Toolbox",
+    "app name": "Enketo Express for Open Data Kit (ODK)",
     "offline enabled": true,
     "linked form and data server": {
-        "name": "KoBo Toolbox"
+        "name": "ODK",
+        "authentication": {
+            "managed by enketo": true
+        }
+    },
+    "logo": {
+      "source": "/images/odk_color.png",
+      "href": ""
     }
 }

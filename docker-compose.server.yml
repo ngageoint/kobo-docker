@@ -20,11 +20,7 @@ odkaggregate:
     - "./.vols/../log/odkaggregate:/usr/local/tomcat/logs"
     - ./secrets/:/tmp/kobo_toolbox_secrets/:ro
     - ./scripts/wait_for_postgres.bash:/etc/my_init.d/00_wait_for_postgres.bash:ro
-    - ./scripts/ssl_add_ca_cert.bash:/etc/my_init.d/01_ssl_add_ca_cert.bash:ro
   restart: always
-  # When testing with a manipulated `/etc/hosts` file.
-  # extra_hosts:
-  #   - 'ee-local.kobotoolbox.org:172.17.0.1'
 
 geoserver:
   image: kobotoolbox/geoserver:latest
@@ -81,25 +77,15 @@ enketo_express:
     - redis_main
     - redis_cache
   restart: always
-  environment:
-    - NODE_TLS_REJECT_UNAUTHORIZED=0
   volumes:
     - ./scripts/computed_vars.server.source.bash:/etc/profile.d/enketo_express_computed_vars.source.bash.sh:ro
-    - ./scripts/enketo_express_update_communicator.bash:/etc/my_init.d/00_update_communicator.bash:ro
     - ./enketo_express/config.json:/srv/tmp/enketo_express_config.json:ro
     - ./scripts/enketo_express_copy_config.bash:/etc/my_init.d/01_enketo_express_copy_config.bash:ro
     - ./secrets/:/tmp/kobo_toolbox_secrets/:ro
-    - ./scripts/ssl_add_ca_cert.bash:/etc/my_init.d/02_ssl_add_ca_cert.bash:ro
     # Override Enketo Express icons.
-    # - ./enketo_express/favicon.ico:/srv/src/enketo_express/public/images/favicon.ico:ro
-    # - ./enketo_express/icon_180x180.png:/srv/src/enketo_express/public/images/icon_180x180.png:ro
+    - ./enketo_express/odk_color.png:/srv/src/enketo_express/public/images/odk_color.png:ro
     # Dev: Use the live `enketo-express` directory from the host machine.
-    # - ../enketo-express:/srv/src/enketo_express
-  # When testing with a manipulated `/etc/hosts` file.
-  # extra_hosts:
-  #   - 'kf-local.kobotoolbox.org:172.17.0.1'
-  #   - 'kc-local.kobotoolbox.org:172.17.0.1'
-  #   - 'odk-aggregate.kobotoolbox.org:172.17.0.1'
+    #- ../enketo-express:/srv/src/enketo_express
 
 # Adapted from https://github.com/kobotoolbox/enketo-express/blob/docker/docker-compose.yml.
 redis_main:
