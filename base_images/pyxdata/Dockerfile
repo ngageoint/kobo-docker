@@ -11,7 +11,10 @@ RUN apt-get -qq update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-RUN pip install -e git+https://github.com/XLSForm/pyxform.git@v0.9.23#egg=pyxform
+RUN pip install Cython
+RUN pip install -e git+https://github.com/jswhit/pyproj.git@master#egg=pyproj
+RUN pip install -e git+https://github.com/hobu/mgrs.git@master#egg=mgrs
+RUN pip install -e git+https://github.com/python-excel/xlrd.git@master#egg=xlrd
 
-WORKDIR /src/pyxform/pyxform
+COPY scripts/convert_data.py /
 
