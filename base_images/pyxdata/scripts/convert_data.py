@@ -71,7 +71,7 @@ def process(output_filename, getHeader, getNumRows, getRow, default_zone, skip_m
         id = m.group('id')
         easting = m.group('easting').ljust(5,'0')
         northing = m.group('northing').ljust(5,'0')
-	mgrs = zone+id+easting+northing
+        mgrs = zone+id+easting+northing
         try:
           lat,lon = mgrs_converter.toLatLon(mgrs)
         except Exception, e:
@@ -110,10 +110,10 @@ opts.update([(key.strip('-'),value) for key,value in optlist])
 level = (logging.INFO, logging.DEBUG)[int('v' in opts or 'verbose' in opts)]
 logging.basicConfig(format='%(asctime)s %(levelname)s %(message)s', level=level)
 
+if len(args) < 2:
+  print 'Missing required filename argument(s)'
+
 if 'h' in opts or 'help' in opts or len(args) < 2:
-  if not args:
-    print 'Missing required filename argument(s)'
-  
   usage()
   sys.exit(1)
 
