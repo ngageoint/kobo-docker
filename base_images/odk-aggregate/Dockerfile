@@ -13,7 +13,7 @@ RUN rm -rf webapps/*
 COPY ./ODKAggregate.war webapps/ROOT.war
 COPY ./server.xml conf/server.xml
 
-EXPOSE 443
+EXPOSE 443 8080
 
 CMD ["/sbin/my_init"]
 
