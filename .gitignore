@@ -4,3 +4,5 @@ secrets/
 build
 docker-compose.yml
 .transifexrc
+enketo_express/logo.png
+enketo_express/config.json

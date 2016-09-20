@@ -1,6 +1,6 @@
-FROM kobotoolbox/base-tomcat:latest
+FROM kobotoolbox/base-tomcat8:latest
 
-ENV GEOSERVER_VERSION=2.8.3
+ENV GEOSERVER_VERSION=2.9.1
 ENV GEOSERVER_URL http://sourceforge.net/projects/geoserver/files/GeoServer/$GEOSERVER_VERSION/geoserver-$GEOSERVER_VERSION-war.zip
 RUN curl -fSL $GEOSERVER_URL -o geoserver-war.zip \
         && rm -rf webapps/* \

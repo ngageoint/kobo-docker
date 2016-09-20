@@ -11,7 +11,7 @@ RUN apt-get -qq update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-RUN pip install -e git+https://github.com/XLSForm/pyxform.git@v0.9.23#egg=pyxform
+RUN pip install -e git+https://github.com/XLSForm/pyxform.git@master#egg=pyxform
 
 WORKDIR /src/pyxform/pyxform
 
